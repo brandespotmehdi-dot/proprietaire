@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courtage Immobilier CRM</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f6f8;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.5em;
+            padding: 0 20px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 5px;
+        }
+
+        .nav-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            transition: background 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-menu a:hover, .nav-menu a.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: #3498db;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .header .date {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .section {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .stat-card h3 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        table th, table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        table th {
+            background: #34495e;
+            color: white;
+            font-weight: bold;
+        }
+
+        table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 1em;
+            background: #f8f9fa;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filters select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background: white;
+        }
+
+        .chart-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            transition: width 0.3s ease;
+        }
+
+        .client-card, .property-card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .client-card:hover, .property-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .status-prospect { background: #f39c12; color: white; }
+        .status-actif { background: #27ae60; color: white; }
+        .status-negociation { background: #e67e22; color: white; }
+        .status-ferme { background: #95a5a6; color: white; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90%;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .close-btn:hover {
+            color: #2c3e50;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <h2>🏢 CRM Immobilier</h2>
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-link active" data-section="dashboard">📊 Tableau de Bord</a></li>
+                <li><a href="#" class="nav-link" data-section="clients">👥 Clients</a></li>
+                <li><a href="#" class="nav-link" data-section="properties">🏠 Biens Immobiliers</a></li>
+                <li><a href="#" class="nav-link" data-section="prospects">🎯 Prospects</a></li>
+                <li><a href="#" class="nav-link" data-section="commissions">💰 Commissions</a></li>
+                <li><a href="#" class="nav-link" data-section="reports">📈 Rapports</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <div class="header">
+                <h1>Gestion de Courtage Immobilier</h1>
+                <div class="date" id="currentDate"></div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <h2>Tableau de Bord</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 id="totalClients">42</h3>
+                        <p>Clients Actifs</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="totalProperties">28</h3>
+                        <p>Biens en Mandat</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="totalProspects">156</h3>
+                        <p>Prospects ce Mois</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="monthlyRevenue">35,450€</h3>
+                        <p>CA du Mois</p>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Objectifs Mensuels</h3>
+                    <div style="margin: 20px 0;">
+                        <p>Chiffre d'Affaires: 35,450€ / 40,000€ (88.6%)</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 88.6%"></div>
+                        </div>
+                    </div>
+                    <div style="margin: 20px 0;">
+                        <p>Nouveaux Mandats: 12 / 15 (80%)</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 80%"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Clients Section -->
+            <section id="clients" class="section">
+                <h2>Gestion des Clients</h2>
+                <button class="btn btn-success" onclick="openClientModal()">+ Nouveau Client</button>
+                
+                <div class="search-bar">
+                    <input type="text" placeholder="🔍 Rechercher un client..." id="clientSearch">
+                </div>
+
+                <div class="filters">
+                    <select id="clientTypeFilter">
+                        <option value="">Tous les types</option>
+                        <option value="Acheteur">Acheteur</option>
+                        <option value="Vendeur">Vendeur</option>
+                        <option value="Investisseur">Investisseur</option>
+                    </select>
+                    <select id="clientStatusFilter">
+                        <option value="">Tous les statuts</option>
+                        <option value="Prospect">Prospect</option>
+                        <option value="Actif">Actif</option>
+                        <option value="En négociation">En négociation</option>
+                        <option value="Fermé">Fermé</option>
+                    </select>
+                </div>
+
+                <div id="clientsList" class="table-container">
+                    <!-- Clients will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Properties Section -->
+            <section id="properties" class="section">
+                <h2>Biens Immobiliers</h2>
+                <button class="btn btn-success" onclick="openPropertyModal()">+ Nouveau Bien</button>
+                
+                <div class="search-bar">
+                    <input type="text" placeholder="🔍 Rechercher un bien..." id="propertySearch">
+                </div>
+
+                <div class="filters">
+                    <select id="propertyTypeFilter">
+                        <option value="">Tous les types</option>
+                        <option value="Appartement">Appartement</option>
+                        <option value="Maison">Maison</option>
+                        <option value="Studio">Studio</option>
+                        <option value="Duplex">Duplex</option>
+                    </select>
+                    <select id="propertyStatusFilter">
+                        <option value="">Tous les statuts</option>
+                        <option value="Disponible">Disponible</option>
+                        <option value="Sous promesse">Sous promesse</option>
+                        <option value="Vendu">Vendu</option>
+                    </select>
+                </div>
+
+                <div id="propertiesList" class="table-container">
+                    <!-- Properties will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Prospects Section -->
+            <section id="prospects" class="section">
+                <h2>Gestion des Prospects</h2>
+                <button class="btn btn-success" onclick="openProspectModal()">+ Nouveau Prospect</button>
+                
+                <div id="prospectsList" class="table-container">
+                    <!-- Prospects will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Commissions Section -->
+            <section id="commissions" class="section">
+                <h2>Calculateur de Commissions</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Prix de Vente (€)</label>
+                        <input type="number" id="salePrice" placeholder="450000">
+                    </div>
+                    <div class="form-group">
+                        <label>Taux de Commission (%)</label>
+                        <input type="number" id="commissionRate" placeholder="4.5" step="0.1">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Frais Marketing (€)</label>
+                        <input type="number" id="marketingFees" placeholder="500">
+                    </div>
+                    <div class="form-group">
+                        <label>Autres Frais (€)</label>
+                        <input type="number" id="otherFees" placeholder="200">
+                    </div>
+                </div>
+
+                <button class="btn" onclick="calculateCommission()">Calculer</button>
+
+                <div id="commissionResult" class="chart-container" style="display: none;">
+                    <h3>Résultat du Calcul</h3>
+                    <div class="form-row">
+                        <div>
+                            <p><strong>Commission Brute:</strong> <span id="grossCommission">-</span></p>
+                            <p><strong>Commission HT:</strong> <span id="netCommissionHT">-</span></p>
+                        </div>
+                        <div>
+                            <p><strong>TVA (20%):</strong> <span id="vatAmount">-</span></p>
+                            <p><strong>Commission Nette:</strong> <span id="finalCommission">-</span></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="section">
+                <h2>Rapports et Analyses</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>15</h3>
+                        <p>Ventes ce Trimestre</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>425,000€</h3>
+                        <p>Prix Moyen de Vente</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>68 jours</h3>
+                        <p>Délai Moyen de Vente</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>12.8%</h3>
+                        <p>Taux de Transformation</p>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Performance par Agent</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Agent</th>
+                                    <th>Mandats</th>
+                                    <th>Ventes</th>
+                                    <th>CA Généré</th>
+                                    <th>Taux</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Jean Martin</td>
+                                    <td>18</td>
+                                    <td>6</td>
+                                    <td>28,500€</td>
+                                    <td>33.3%</td>
+                                </tr>
+                                <tr>
+                                    <td>Marie Dupont</td>
+                                    <td>15</td>
+                                    <td>4</td>
+                                    <td>22,300€</td>
+                                    <td>26.7%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Client Modal -->
+    <div id="clientModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nouveau Client</h3>
+                <button class="close-btn" onclick="closeModal('clientModal')">&times;</button>
+            </div>
+            <form id="clientForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Prénom</label>
+                        <input type="text" name="prenom" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nom</label>
+                        <input type="text" name="nom" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Téléphone</label>
+                        <input type="tel" name="telephone">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Type de Client</label>
+                        <select name="type_client" required>
+                            <option value="">Sélectionner</option>
+                            <option value="Acheteur">Acheteur</option>
+                            <option value="Vendeur">Vendeur</option>
+                            <option value="Investisseur">Investisseur</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Statut</label>
+                        <select name="statut" required>
+                            <option value="Prospect">Prospect</option>
+                            <option value="Actif">Actif</option>
+                            <option value="En négociation">En négociation</option>
+                            <option value="Fermé">Fermé</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Budget Min (€)</label>
+                        <input type="number" name="budget_min">
+                    </div>
+                    <div class="form-group">
+                        <label>Budget Max (€)</label>
+                        <input type="number" name="budget_max">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Zone de Recherche</label>
+                    <input type="text" name="zone_recherche">
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea name="notes" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let clients = JSON.parse(localStorage.getItem('crm_clients')) || [
+            {
+                id: 1,
+                prenom: 'Marie',
+                nom: 'Dupont',
+                telephone: '06.12.34.56.78',
+                email: 'marie.dupont@email.fr',
+                type_client: 'Acheteur',
+                statut: 'Actif',
+                budget_min: 200000,
+                budget_max: 350000,
+                zone_recherche: 'Paris 15e',
+                notes: 'Recherche appartement 3 pièces'
+            },
+            {
+                id: 2,
+                prenom: 'Jean',
+                nom: 'Martin',
+                telephone: '01.23.45.67.89',
+                email: 'jean.martin@email.fr',
+                type_client: 'Vendeur',
+                statut: 'En négociation',
+                budget_min: 0,
+                budget_max: 0,
+                zone_recherche: 'Boulogne',
+                notes: 'Maison familiale à vendre'
+            }
+        ];
+
+        let properties = JSON.parse(localStorage.getItem('crm_properties')) || [
+            {
+                id: 1,
+                reference: 'REF001',
+                type_bien: 'Appartement',
+                adresse: '45 rue de la République',
+                ville: 'Paris 15e',
+                surface: 65,
+                pieces: 3,
+                prix: 480000,
+                statut: 'Disponible',
+                proprietaire: 'M. Dupont',
+                visites: 12
+            }
+        ];
+
+        let prospects = JSON.parse(localStorage.getItem('crm_prospects')) || [];
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentDate();
+            setupNavigation();
+            loadClients();
+            loadProperties();
+            updateDashboard();
+        });
+
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('fr-FR', options);
+        }
+
+        function setupNavigation() {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Update active nav link
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding section
+                    const targetSection = this.getAttribute('data-section');
+                    document.querySelectorAll('.section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    document.getElementById(targetSection).classList.add('active');
+                });
+            });
+        }
+
+        function updateDashboard() {
+            document.getElementById('totalClients').textContent = clients.length;
+            document.getElementById('totalProperties').textContent = properties.length;
+            document.getElementById('totalProspects').textContent = prospects.length;
+        }
+
+        function loadClients() {
+            const clientsList = document.getElementById('clientsList');
+            
+            let html = '<table><thead><tr>';
+            html += '<th>Nom Complet</th><th>Type</th><th>Statut</th><th>Budget</th><th>Zone</th><th>Contact</th><th>Actions</th>';
+            html += '</tr></thead><tbody>';
+            
+            clients.forEach(client => {
+                const budget = client.budget_min && client.budget_max ? 
+                    `${client.budget_min.toLocaleString('fr-FR')}€ - ${client.budget_max.toLocaleString('fr-FR')}€` : 
+                    'Non défini';
+                
+                html += `<tr>
+                    <td><strong>${client.prenom} ${client.nom}</strong></td>
+                    <td>${client.type_client}</td>
+                    <td><span class="status-badge status-${client.statut.toLowerCase().replace(' ', '')}">${client.statut}</span></td>
+                    <td>${budget}</td>
+                    <td>${client.zone_recherche || '-'}</td>
+                    <td>${client.telephone}<br><small>${client.email}</small></td>
+                    <td>
+                        <button class="btn" onclick="editClient(${client.id})">Modifier</button>
+                        <button class="btn btn-danger" onclick="deleteClient(${client.id})">Supprimer</button>
+                    </td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            clientsList.innerHTML = html;
+        }
+
+        function loadProperties() {
+            const propertiesList = document.getElementById('propertiesList');
+            
+            let html = '<table><thead><tr>';
+            html += '<th>Référence</th><th>Type</th><th>Adresse</th><th>Surface</th><th>Prix</th><th>Statut</th><th>Visites</th><th>Actions</th>';
+            html += '</tr></thead><tbody>';
+            
+            properties.forEach(property => {
+                const prixM2 = Math.round(property.prix / property.surface);
+                
+                html += `<tr>
+                    <td><strong>${property.reference}</strong></td>
+                    <td>${property.type_bien}</td>
+                    <td>${property.adresse}, ${property.ville}</td>
+                    <td>${property.surface}m² (${property.pieces}P)</td>
+                    <td>${property.prix.toLocaleString('fr-FR')}€<br><small>${prixM2.toLocaleString('fr-FR')}€/m²</small></td>
+                    <td><span class="status-badge status-${property.statut.toLowerCase().replace(' ', '')}">${property.statut}</span></td>
+                    <td>${property.visites || 0}</td>
+                    <td>
+                        <button class="btn" onclick="editProperty(${property.id})">Modifier</button>
+                        <button class="btn btn-danger" onclick="deleteProperty(${property.id})">Supprimer</button>
+                    </td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            propertiesList.innerHTML = html;
+        }
+
+        function openClientModal(clientId = null) {
+            document.getElementById('clientModal').style.display = 'block';
+            
+            if (clientId) {
+                const client = clients.find(c => c.id === clientId);
+                if (client) {
+                    // Populate form with client data for editing
+                    Object.keys(client).forEach(key => {
+                        const input = document.querySelector(`[name="${key}"]`);
+                        if (input) input.value = client[key];
+                    });
+                }
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Client form submission
+        document.getElementById('clientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const clientData = {};
+            
+            for (let [key, value] of formData.entries()) {
+                clientData[key] = value;
+            }
+            
+            clientData.id = clients.length > 0 ? Math.max(...clients.map(c => c.id)) + 1 : 1;
+            clientData.date_creation = new Date().toISOString().split('T')[0];
+            
+            // Convert budget fields to numbers
+            if (clientData.budget_min) clientData.budget_min = parseInt(clientData.budget_min);
+            if (clientData.budget_max) clientData.budget_max = parseInt(clientData.budget_max);
+            
+            clients.push(clientData);
+            localStorage.setItem('crm_clients', JSON.stringify(clients));
+            
+            loadClients();
+            updateDashboard();
+            closeModal('clientModal');
+            this.reset();
+            
+            alert('Client ajouté avec succès !');
+        });
+
+        function deleteClient(clientId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce client ?')) {
+                clients = clients.filter(c => c.id !== clientId);
+                localStorage.setItem('crm_clients', JSON.stringify(clients));
+                loadClients();
+                updateDashboard();
+                alert('Client supprimé avec succès !');
+            }
+        }
+
+        function calculateCommission() {
+            const salePrice = parseFloat(document.getElementById('salePrice').value) || 0;
+            const commissionRate = parseFloat(document.getElementById('commissionRate').value) || 0;
+            const marketingFees = parseFloat(document.getElementById('marketingFees').value) || 0;
+            const otherFees = parseFloat(document.getElementById('otherFees').value) || 0;
+            
+            if (salePrice === 0 || commissionRate === 0) {
+                alert('Veuillez remplir le prix de vente et le taux de commission');
+                return;
+            }
+            
+            const grossCommission = salePrice * (commissionRate / 100);
+            const netCommissionHT = grossCommission / 1.20;
+            const vatAmount = grossCommission - netCommissionHT;
+            const finalCommission = netCommissionHT - marketingFees - otherFees;
+            
+            document.getElementById('grossCommission').textContent = grossCommission.toLocaleString('fr-FR', {minimumFractionDigits: 2}) + '€';
+            document.getElementById('netCommissionHT').textContent = netCommissionHT.toLocaleString('fr-FR', {minimumFractionDigits: 2}) + '€';
+            document.getElementById('vatAmount').textContent = vatAmount.toLocaleString('fr-FR', {minimumFractionDigits: 2}) + '€';
+            document.getElementById('finalCommission').textContent = finalCommission.toLocaleString('fr-FR', {minimumFractionDigits: 2}) + '€';
+            
+            document.getElementById('commissionResult').style.display = 'block';
+        }
+
+        // Search and filter functionality
+        document.getElementById('clientSearch').addEventListener('input', function() {
+            // Implement client search functionality
+        });
+
+        // Property modal functions (similar to client functions)
+        function openPropertyModal(propertyId = null) {
+            // Implement property modal opening
+            alert('Fonction à implémenter : Formulaire de bien immobilier');
+        }
+
+        function openProspectModal(prospectId = null) {
+            // Implement prospect modal opening
+            alert('Fonction à implémenter : Formulaire de prospect');
+        }
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+
+        // Mobile menu toggle (for responsive design)
+        function toggleMobileMenu() {
+            document.querySelector('.sidebar').classList.toggle('mobile-open');
+        }
+    </script>
+</body>
+</html>
