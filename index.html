@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courtage Immobilier - Tableau de Bord</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>🏘️ Courtage Pro</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-link active" data-section="dashboard">📊 Tableau de Bord</a></li>
+                <li><a href="#" class="nav-link" data-section="clients">👥 Clients</a></li>
+                <li><a href="#" class="nav-link" data-section="properties">🏠 Biens Immobiliers</a></li>
+                <li><a href="#" class="nav-link" data-section="prospects">🎯 Prospects</a></li>
+                <li><a href="#" class="nav-link" data-section="commissions">💰 Commissions</a></li>
+                <li><a href="#" class="nav-link" data-section="reports">📈 Rapports</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <h1 id="page-title">Tableau de Bord</h1>
+                <div class="header-actions">
+                    <span class="current-date"></span>
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <h3>Mandats Actifs</h3>
+                        <div class="kpi-value">45</div>
+                        <div class="kpi-change positive">+7 ce mois</div>
+                    </div>
+                    <div class="kpi-card">
+                        <h3>CA Réalisé</h3>
+                        <div class="kpi-value">42 000€</div>
+                        <div class="kpi-change positive">+20% vs objectif</div>
+                    </div>
+                    <div class="kpi-card">
+                        <h3>Ventes Finalisées</h3>
+                        <div class="kpi-value">8</div>
+                        <div class="kpi-change neutral">ce mois</div>
+                    </div>
+                    <div class="kpi-card">
+                        <h3>Taux Transformation</h3>
+                        <div class="kpi-value">17.8%</div>
+                        <div class="kpi-change positive">+2% vs mois dernier</div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>Performance Mensuelle</h3>
+                        <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/9a6f6150aeb38b70ff1250ed36c8cd04/de444904-02de-4410-8eef-b3070820ab8f/92ed4ee5.png" alt="Graphique de performance mensuelle" class="chart-image">
+                    </div>
+                    <div class="chart-card">
+                        <h3>Répartition Clientèle</h3>
+                        <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/9a6f6150aeb38b70ff1250ed36c8cd04/d5a3df7e-ab1f-41f8-a903-4c80ddeeabff/e8500ce8.png" alt="Répartition de la clientèle" class="chart-image">
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3>Activité Récente</h3>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <span class="activity-icon">🏠</span>
+                            <div class="activity-content">
+                                <div class="activity-title">Nouveau mandat signé</div>
+                                <div class="activity-desc">Appartement 3P - Paris 15e - 480 000€</div>
+                                <div class="activity-time">Il y a 2 heures</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">👥</span>
+                            <div class="activity-content">
+                                <div class="activity-title">Nouveau client enregistré</div>
+                                <div class="activity-desc">Pierre Bernard - Acheteur - Budget 250k€</div>
+                                <div class="activity-time">Il y a 4 heures</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">💰</span>
+                            <div class="activity-content">
+                                <div class="activity-title">Vente finalisée</div>
+                                <div class="activity-desc">Commission de 19 200€ encaissée</div>
+                                <div class="activity-time">Hier</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Clients Section -->
+            <section id="clients" class="content-section">
+                <div class="section-header">
+                    <div class="section-actions">
+                        <button class="btn btn--primary" id="add-client-btn">+ Nouveau Client</button>
+                        <input type="text" class="form-control search-input" placeholder="Rechercher un client..." id="client-search">
+                    </div>
+                    <div class="filters">
+                        <select class="form-control" id="client-type-filter">
+                            <option value="">Tous les types</option>
+                            <option value="Acheteur">Acheteur</option>
+                            <option value="Vendeur">Vendeur</option>
+                            <option value="Investisseur">Investisseur</option>
+                        </select>
+                        <select class="form-control" id="client-status-filter">
+                            <option value="">Tous les statuts</option>
+                            <option value="Prospect">Prospect</option>
+                            <option value="Actif">Actif</option>
+                            <option value="Inactif">Inactif</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="clients-table">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Contact</th>
+                                <th>Type</th>
+                                <th>Statut</th>
+                                <th>Budget</th>
+                                <th>Zone</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Client data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Properties Section -->
+            <section id="properties" class="content-section">
+                <div class="section-header">
+                    <div class="section-actions">
+                        <button class="btn btn--primary" id="add-property-btn">+ Nouveau Bien</button>
+                    </div>
+                    <div class="filters">
+                        <select class="form-control" id="property-type-filter">
+                            <option value="">Tous les types</option>
+                            <option value="Appartement">Appartement</option>
+                            <option value="Maison">Maison</option>
+                            <option value="Local commercial">Local commercial</option>
+                        </select>
+                        <select class="form-control" id="property-status-filter">
+                            <option value="">Tous les statuts</option>
+                            <option value="Disponible">Disponible</option>
+                            <option value="Sous promesse">Sous promesse</option>
+                            <option value="Vendu">Vendu</option>
+                        </select>
+                        <input type="text" class="form-control" placeholder="Ville..." id="property-city-filter">
+                    </div>
+                </div>
+                <div class="properties-grid" id="properties-grid">
+                    <!-- Property cards will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Prospects Section -->
+            <section id="prospects" class="content-section">
+                <div class="section-header">
+                    <div class="section-actions">
+                        <button class="btn btn--primary" id="add-prospect-btn">+ Nouveau Prospect</button>
+                    </div>
+                    <div class="filters">
+                        <select class="form-control" id="prospect-status-filter">
+                            <option value="">Tous les statuts</option>
+                            <option value="Nouveau">Nouveau</option>
+                            <option value="Contacté">Contacté</option>
+                            <option value="Qualifié">Qualifié</option>
+                            <option value="Converti">Converti</option>
+                        </select>
+                        <select class="form-control" id="prospect-source-filter">
+                            <option value="">Toutes les sources</option>
+                            <option value="Site web">Site web</option>
+                            <option value="Référence client">Référence client</option>
+                            <option value="Publicité">Publicité</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="prospects-pipeline">
+                    <div class="pipeline-column">
+                        <h4>Nouveaux (2)</h4>
+                        <div class="pipeline-items" id="prospects-nouveau">
+                            <!-- Prospect cards will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    <div class="pipeline-column">
+                        <h4>Contactés (1)</h4>
+                        <div class="pipeline-items" id="prospects-contacte">
+                            <!-- Prospect cards will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    <div class="pipeline-column">
+                        <h4>Qualifiés (0)</h4>
+                        <div class="pipeline-items" id="prospects-qualifie">
+                            <!-- Prospect cards will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    <div class="pipeline-column">
+                        <h4>Convertis (0)</h4>
+                        <div class="pipeline-items" id="prospects-converti">
+                            <!-- Prospect cards will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Commissions Section -->
+            <section id="commissions" class="content-section">
+                <div class="commission-calculator">
+                    <h3>Calculateur de Commissions</h3>
+                    <div class="calc-form">
+                        <div class="form-group">
+                            <label class="form-label">Prix de Vente (€)</label>
+                            <input type="number" class="form-control" id="sale-price" placeholder="Ex: 450000">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Taux de Commission (%)</label>
+                            <input type="number" class="form-control" id="commission-rate" placeholder="Ex: 4.0" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Frais Annexes (€)</label>
+                            <input type="number" class="form-control" id="additional-fees" placeholder="Ex: 800">
+                        </div>
+                        <button class="btn btn--primary" id="calculate-commission">Calculer</button>
+                    </div>
+                    <div class="calc-results" id="commission-results">
+                        <div class="result-item">
+                            <span class="result-label">Commission Brute:</span>
+                            <span class="result-value" id="gross-commission">0€</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Commission HT:</span>
+                            <span class="result-value" id="ht-commission">0€</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">TVA (20%):</span>
+                            <span class="result-value" id="vat-amount">0€</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Commission Nette:</span>
+                            <span class="result-value total" id="net-commission">0€</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="commission-history">
+                    <h3>Historique des Commissions</h3>
+                    <div class="table-container">
+                        <table class="data-table" id="commissions-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Prix Vente</th>
+                                    <th>Taux</th>
+                                    <th>Commission Brute</th>
+                                    <th>Commission Nette</th>
+                                    <th>Agent</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Commission data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="content-section">
+                <div class="reports-grid">
+                    <div class="report-card">
+                        <h3>Performance Mensuelle</h3>
+                        <div class="report-stats">
+                            <div class="stat">
+                                <span class="stat-label">Objectif CA Octobre</span>
+                                <span class="stat-value">35 000€</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">CA Réalisé</span>
+                                <span class="stat-value">42 000€</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Performance</span>
+                                <span class="stat-value positive">+120%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="report-card">
+                        <h3>Acquisition Clients</h3>
+                        <div class="report-stats">
+                            <div class="stat">
+                                <span class="stat-label">Nouveaux Clients</span>
+                                <span class="stat-value">12</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Taux Conversion</span>
+                                <span class="stat-value">17.8%</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Coût d'acquisition</span>
+                                <span class="stat-value">145€</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="report-card">
+                        <h3>Performance Biens</h3>
+                        <div class="report-stats">
+                            <div class="stat">
+                                <span class="stat-label">Visites Organisées</span>
+                                <span class="stat-value">85</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Temps Moyen Vente</span>
+                                <span class="stat-value">42 jours</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Prix Moyen Vente</span>
+                                <span class="stat-value">524 000€</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="monthly-comparison">
+                    <h3>Comparaison Mensuelle</h3>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Mois</th>
+                                    <th>Nouveaux Mandats</th>
+                                    <th>Mandats Actifs</th>
+                                    <th>Visites</th>
+                                    <th>Ventes</th>
+                                    <th>CA Réalisé</th>
+                                    <th>Objectif CA</th>
+                                    <th>Taux Transformation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Octobre</td>
+                                    <td>12</td>
+                                    <td>45</td>
+                                    <td>85</td>
+                                    <td>8</td>
+                                    <td>42 000€</td>
+                                    <td>35 000€</td>
+                                    <td class="positive">17.8%</td>
+                                </tr>
+                                <tr>
+                                    <td>Septembre</td>
+                                    <td>10</td>
+                                    <td>38</td>
+                                    <td>72</td>
+                                    <td>6</td>
+                                    <td>28 000€</td>
+                                    <td>35 000€</td>
+                                    <td>15.8%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for adding/editing clients -->
+    <div id="client-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 id="client-modal-title">Nouveau Client</h3>
+            <form id="client-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Prénom</label>
+                        <input type="text" class="form-control" id="client-prenom" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nom</label>
+                        <input type="text" class="form-control" id="client-nom" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Téléphone</label>
+                        <input type="tel" class="form-control" id="client-telephone" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="client-email" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Type de Client</label>
+                        <select class="form-control" id="client-type" required>
+                            <option value="">Sélectionner...</option>
+                            <option value="Acheteur">Acheteur</option>
+                            <option value="Vendeur">Vendeur</option>
+                            <option value="Investisseur">Investisseur</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Statut</label>
+                        <select class="form-control" id="client-status" required>
+                            <option value="">Sélectionner...</option>
+                            <option value="Prospect">Prospect</option>
+                            <option value="Actif">Actif</option>
+                            <option value="Inactif">Inactif</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row" id="budget-fields">
+                    <div class="form-group">
+                        <label class="form-label">Budget Min (€)</label>
+                        <input type="number" class="form-control" id="client-budget-min">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Budget Max (€)</label>
+                        <input type="number" class="form-control" id="client-budget-max">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Zone de Recherche</label>
+                    <input type="text" class="form-control" id="client-zone">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Notes</label>
+                    <textarea class="form-control" id="client-notes" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn--secondary" id="cancel-client">Annuler</button>
+                    <button type="submit" class="btn btn--primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
